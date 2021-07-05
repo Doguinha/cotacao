@@ -18,7 +18,7 @@ export default function Item({ itemSelecionado, coletarDados }) {
   const handleQuantidade = (evento) => {
     setQuantidade(evento.target.value);
     coletarDados({
-      id: itemSelecionado.id,
+      ...itemSelecionado,
       quantidade: evento.target.value,
       unidadeCompra: unidadeCompra,
     });
@@ -26,11 +26,12 @@ export default function Item({ itemSelecionado, coletarDados }) {
   const handleUnidadeCompra = (evento) => {
     setUnidadeCompra(evento.target.value);
     coletarDados({
-      id: itemSelecionado.id,
+      ...itemSelecionado,
       unidadeCompra: evento.target.value,
       quantidade: quantidade,
     });
   };
+
 
   return (
     <TableRow>

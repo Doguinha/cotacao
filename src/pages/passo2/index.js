@@ -18,15 +18,6 @@ import {
 import Item from "./item";
 
 export default function Passo2({ aoEnviar, dadosColetados, voltarPasso }) {
-  function coletarDadosPasso2(itemAlterado) {
-    const item = dadosColetados.itensSelecionados.find(
-      (item) => itemAlterado.id === item.id
-    );
-    item.quantidade = itemAlterado.quantidade;
-    item.unidadeCompra = itemAlterado.unidadeCompra;
-    aoEnviar(item);
-  }
-
   return (
     <form>
       <TableContainer component={Paper}>
@@ -44,7 +35,7 @@ export default function Passo2({ aoEnviar, dadosColetados, voltarPasso }) {
               <Item
                 itemSelecionado={item}
                 key={item.id}
-                coletarDados={coletarDadosPasso2}
+                coletarDados={aoEnviar}
               />
             ))}
           </TableBody>

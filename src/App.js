@@ -8,7 +8,7 @@ import { useState } from "react";
 function App() {
   const [passoAtual, setPassoAtual] = useState(0);
   const [dadosColetados, setDadosColetados] = useState({
-    itensSelecionados: [{}],
+    itensSelecionados: [],
     nome: "",
     tipo: "CompraPorItem",
     objeto: "",
@@ -46,17 +46,18 @@ function App() {
   }
 
   function coletarDadosPasso2(itemAlterado) {
-    const itensCopia = dadosColetados.itensSelecionados;
-    let indice = itensCopia.findIndex(
-      (itemSelecionado) => itemSelecionado.id === itemAlterado.id
-    );
-    itensCopia.splice(indice, 1, itemAlterado);
     setDadosColetados({
-      nome: dadosColetados.nome,
-      tipo: dadosColetados.tipo,
-      objeto: dadosColetados.objeto,
-      itensSelecionados: itensCopia,
-    });
+    ...dadosColetados,
+    itensSelecionados: dadosColetados.itensSelecionados.map((item) => {
+      if(item.id === itemAlterado.id) {
+        return {
+          ...item,
+          quantidade: itemAlterado.quantidade,
+          unidadeCompra: itemAlterado.unidadeCompra
+        }
+      }
+        return item;
+      })});
   }
 
   return (
