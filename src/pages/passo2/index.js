@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { Delete as DeleteIcon, Save as SaveIcon } from "@material-ui/icons";
 import ArrowBackIcon from "@material-ui/icons/ArrowBack";
 import {
@@ -15,9 +14,14 @@ import {
   TextField,
   IconButton,
 } from "@material-ui/core";
-import Item from "./item";
 
-export default function Passo2({ aoEnviar, dadosColetados, voltarPasso }) {
+export default function Passo2({
+  itensSelecionados,
+  voltarPasso,
+  handleUnidadeCompra,
+  handleQuantidade,
+  handleRemoverItem,
+}) {
   return (
     <form>
       <TableContainer component={Paper}>
@@ -31,12 +35,44 @@ export default function Passo2({ aoEnviar, dadosColetados, voltarPasso }) {
             </TableRow>
           </TableHead>
           <TableBody>
-            {dadosColetados.itensSelecionados.map((item) => (
-              <Item
-                itemSelecionado={item}
-                key={item.id}
-                coletarDados={aoEnviar}
-              />
+            {itensSelecionados.map((item) => (
+              <TableRow key={item.id}>
+                <TableCell align="center" size="medium">
+                  {item.nome}
+                </TableCell>
+                <TableCell align="center" size="small">
+                  <Select
+                    labelId="label-tipo"
+                    value={item.unidadeCompra}
+                    fullWidth
+                    onChange={(evento) => handleUnidadeCompra(evento, item.id)}
+                  >
+                    <MenuItem value={"Unidade"}>Unidade</MenuItem>
+                    <MenuItem value={"Pacote"}>Pacote</MenuItem>
+                  </Select>
+                </TableCell>
+                <TableCell align="center" size="small">
+                  <TextField
+                    inputProps={{ style: { textAlign: "center" } }}
+                    required
+                    type="number"
+                    placeholder="Informe a quantidade"
+                    value={item.quantidade}
+                    error={false}
+                    helperText=""
+                    onChange={(evento) => handleQuantidade(evento, item.id)}
+                  />
+                </TableCell>
+                <TableCell align="center">
+                  <IconButton
+                    aria-label="delete"
+                    color="secondary"
+                    onClick={() => handleRemoverItem(item.id)}
+                  >
+                    <DeleteIcon />
+                  </IconButton>
+                </TableCell>
+              </TableRow>
             ))}
           </TableBody>
         </Table>

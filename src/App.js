@@ -13,24 +13,39 @@ function App() {
     tipo: "CompraPorItem",
     objeto: "",
   });
-  const formularios = [
-    <Passo1 aoEnviar={coletarDados} dadosColetados={dadosColetados} />,
-    <Passo2
-      aoEnviar={coletarDadosPasso2}
-      dadosColetados={dadosColetados}
-      voltarPasso={voltarPasso}
-    />,
-    <Passo3
-      aoEnviar={coletarDados}
-      dadosColetados={dadosColetados}
-      voltarPasso={voltarPasso}
-    />,
-    <Passo4
-      aoEnviar={coletarDados}
-      dadosColetados={dadosColetados}
-      voltarPasso={voltarPasso}
-    />,
-  ];
+
+  const handleQuantidade = (evento, itemId) => {
+    const novosItens = dadosColetados.itensSelecionados.map((item) => {
+      if (item.id === itemId) {
+        return {
+          ...item,
+          quantidade: evento.target.value,
+        };
+      }
+      return item;
+    });
+    setDadosColetados({ ...dadosColetados, itensSelecionados: novosItens });
+  };
+
+  const handleUnidadeCompra = (evento, itemId) => {
+    const novosItens = dadosColetados.itensSelecionados.map((item) => {
+      if (item.id === itemId) {
+        return {
+          ...item,
+          unidadeCompra: evento.target.value,
+        };
+      }
+      return item;
+    });
+    setDadosColetados({ ...dadosColetados, itensSelecionados: novosItens });
+  };
+
+  const handleRemoverItem = (itemId) => {
+    const novosItens = dadosColetados.itensSelecionados.filter(
+      (item) => item.id !== itemId
+    );
+    setDadosColetados({ ...dadosColetados, itensSelecionados: novosItens });
+  };
 
   function proximoPasso() {
     setPassoAtual(passoAtual + 1);
@@ -45,20 +60,26 @@ function App() {
     proximoPasso();
   }
 
-  function coletarDadosPasso2(itemAlterado) {
-    setDadosColetados({
-    ...dadosColetados,
-    itensSelecionados: dadosColetados.itensSelecionados.map((item) => {
-      if(item.id === itemAlterado.id) {
-        return {
-          ...item,
-          quantidade: itemAlterado.quantidade,
-          unidadeCompra: itemAlterado.unidadeCompra
-        }
-      }
-        return item;
-      })});
-  }
+  const formularios = [
+    <Passo1 aoEnviar={coletarDados} dadosColetados={dadosColetados} />,
+    <Passo2
+      itensSelecionados={dadosColetados.itensSelecionados}
+      voltarPasso={voltarPasso}
+      handleUnidadeCompra={handleUnidadeCompra}
+      handleQuantidade={handleQuantidade}
+      handleRemoverItem={handleRemoverItem}
+    />,
+    <Passo3
+      aoEnviar={coletarDados}
+      dadosColetados={dadosColetados}
+      voltarPasso={voltarPasso}
+    />,
+    <Passo4
+      aoEnviar={coletarDados}
+      dadosColetados={dadosColetados}
+      voltarPasso={voltarPasso}
+    />,
+  ];
 
   return (
     <Container maxWidth="md">
