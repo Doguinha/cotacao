@@ -137,6 +137,21 @@ function App() {
     });
     setDadosColetados({ ...dadosColetados, orcamentos: novosItens });
   };
+  const handleRemoveItemOrcamento = (orcamentoId, itemId) => {
+    const novosItens = dadosColetados.orcamentos.map((orcamento) => {
+      if (orcamento.id === orcamentoId) {
+        const itensDoOrcamento = orcamento.itens.filter(
+          (itemOrcamento) => itemOrcamento.id !== itemId
+        );
+        return {
+          ...orcamento,
+          itens: itensDoOrcamento,
+        };
+      }
+      return orcamento;
+    });
+    setDadosColetados({ ...dadosColetados, orcamentos: novosItens });
+  };
 
   const formularios = [
     <Passo1 aoEnviar={coletarDados} dadosColetados={dadosColetados} />,
@@ -157,6 +172,7 @@ function App() {
       handleDataOrcamento={handleDataOrcamento}
       handleDataValidade={handleDataValidade}
       handleValorUnitarioItemOrcamento={handleValorUnitarioItemOrcamento}
+      handleRemoveItemOrcamento={handleRemoveItemOrcamento}
     />,
     <Passo4
       aoEnviar={coletarDados}

@@ -1,4 +1,4 @@
-import { Button, TextField, Grid, Paper } from "@material-ui/core";
+import { Button, TextField, Grid, Paper, IconButton } from "@material-ui/core";
 import { Autocomplete } from "@material-ui/lab";
 import { fornecedores } from "../../api";
 import { makeStyles } from "@material-ui/core/styles";
@@ -6,6 +6,7 @@ import {
   ArrowBack as ArrowBackIcon,
   Save as SaveIcon,
   PlusOne as PlusOneIcon,
+  Delete as DeleteIcon,
 } from "@material-ui/icons";
 export default function Passo3({
   orcamentos,
@@ -16,6 +17,7 @@ export default function Passo3({
   handleDataOrcamento,
   handleDataValidade,
   handleValorUnitarioItemOrcamento,
+  handleRemoveItemOrcamento,
 }) {
   const useStyles = makeStyles((theme) => ({
     paper: {
@@ -111,7 +113,7 @@ export default function Passo3({
                     disabled
                   />
                 </Grid>
-                <Grid item xs={4}>
+                <Grid item xs={3}>
                   <TextField
                     required
                     label="Valor Unitário"
@@ -127,6 +129,17 @@ export default function Passo3({
                       )
                     }
                   />
+                </Grid>
+                <Grid item xs={1}>
+                  <IconButton
+                    aria-label="delete"
+                    color="secondary"
+                    onClick={() =>
+                      handleRemoveItemOrcamento(orcamento.id, itemOrcamento.id)
+                    }
+                  >
+                    <DeleteIcon />
+                  </IconButton>
                 </Grid>
               </>
             ))}
