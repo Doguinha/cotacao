@@ -69,6 +69,10 @@ function App() {
       fornecedor: null,
       dataValidade: new Date().toISOString().split("T")[0],
       dataOrcamento: new Date().toISOString().split("T")[0],
+      itens: dadosColetados.itensSelecionados.map((item) => ({
+        ...item,
+        valorUnitario: "",
+      })),
     });
     setDadosColetados({ ...dadosColetados, orcamentos: orcamentosCopia });
   };
@@ -112,6 +116,28 @@ function App() {
     setDadosColetados({ ...dadosColetados, orcamentos: novosItens });
   };
 
+  const handleValorUnitarioItemOrcamento = (evento, orcamentoId, itemId) => {
+    const novosItens = dadosColetados.orcamentos.map((orcamento) => {
+      if (orcamento.id === orcamentoId) {
+        const itensDoOrcamento = orcamento.itens.map((itemOrcamento) => {
+          if (itemOrcamento.id === itemId) {
+            return {
+              ...itemOrcamento,
+              valorUnitario: evento.target.value,
+            };
+          }
+          return itemOrcamento;
+        });
+        return {
+          ...orcamento,
+          itens: itensDoOrcamento,
+        };
+      }
+      return orcamento;
+    });
+    setDadosColetados({ ...dadosColetados, orcamentos: novosItens });
+  };
+
   const formularios = [
     <Passo1 aoEnviar={coletarDados} dadosColetados={dadosColetados} />,
     <Passo2
@@ -130,6 +156,7 @@ function App() {
       handleSelecionarFornecedor={handleSelecionarFornecedor}
       handleDataOrcamento={handleDataOrcamento}
       handleDataValidade={handleDataValidade}
+      handleValorUnitarioItemOrcamento={handleValorUnitarioItemOrcamento}
     />,
     <Passo4
       aoEnviar={coletarDados}
