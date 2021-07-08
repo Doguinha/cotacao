@@ -5,6 +5,7 @@ import Passo4 from "./pages/passo4";
 import { Container } from "@material-ui/core";
 import { Step, StepLabel, Stepper } from "@material-ui/core";
 import { useState } from "react";
+import { uuidv4 } from "./api";
 function App() {
   const [passoAtual, setPassoAtual] = useState(0);
   const [dadosColetados, setDadosColetados] = useState({
@@ -12,6 +13,7 @@ function App() {
     nome: "",
     tipo: "CompraPorItem",
     objeto: "",
+    orcamentos: [],
   });
 
   const handleQuantidade = (evento, itemId) => {
@@ -60,19 +62,74 @@ function App() {
     proximoPasso();
   }
 
+  const adicionarOrcamento = () => {
+    const orcamentosCopia = dadosColetados.orcamentos;
+    orcamentosCopia.push({
+      id: uuidv4(),
+      fornecedor: null,
+      dataValidade: new Date().toISOString().split("T")[0],
+      dataOrcamento: new Date().toISOString().split("T")[0],
+    });
+    setDadosColetados({ ...dadosColetados, orcamentos: orcamentosCopia });
+  };
+
+  const handleSelecionarFornecedor = (fornecedor, orcamentoId) => {
+    const novosItens = dadosColetados.orcamentos.map((orcamento) => {
+      if (orcamento.id === orcamentoId) {
+        return {
+          ...orcamento,
+          fornecedor: fornecedor,
+        };
+      }
+      return orcamento;
+    });
+    setDadosColetados({ ...dadosColetados, orcamentos: novosItens });
+  };
+
+  const handleDataValidade = (evento, orcamentoId) => {
+    const novosItens = dadosColetados.orcamentos.map((orcamento) => {
+      if (orcamento.id === orcamentoId) {
+        return {
+          ...orcamento,
+          dataValidade: evento.target.value,
+        };
+      }
+      return orcamento;
+    });
+    setDadosColetados({ ...dadosColetados, orcamentos: novosItens });
+  };
+
+  const handleDataOrcamento = (evento, orcamentoId) => {
+    const novosItens = dadosColetados.orcamentos.map((orcamento) => {
+      if (orcamento.id === orcamentoId) {
+        return {
+          ...orcamento,
+          dataOrcamento: evento.target.value,
+        };
+      }
+      return orcamento;
+    });
+    setDadosColetados({ ...dadosColetados, orcamentos: novosItens });
+  };
+
   const formularios = [
     <Passo1 aoEnviar={coletarDados} dadosColetados={dadosColetados} />,
     <Passo2
       itensSelecionados={dadosColetados.itensSelecionados}
       voltarPasso={voltarPasso}
+      proximoPasso={proximoPasso}
       handleUnidadeCompra={handleUnidadeCompra}
       handleQuantidade={handleQuantidade}
       handleRemoverItem={handleRemoverItem}
     />,
     <Passo3
-      aoEnviar={coletarDados}
-      dadosColetados={dadosColetados}
+      orcamentos={dadosColetados.orcamentos}
       voltarPasso={voltarPasso}
+      proximoPasso={proximoPasso}
+      adicionarOrcamento={adicionarOrcamento}
+      handleSelecionarFornecedor={handleSelecionarFornecedor}
+      handleDataOrcamento={handleDataOrcamento}
+      handleDataValidade={handleDataValidade}
     />,
     <Passo4
       aoEnviar={coletarDados}

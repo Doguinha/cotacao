@@ -10,7 +10,7 @@ import {
 } from "@material-ui/core";
 import { Autocomplete } from "@material-ui/lab";
 import SaveIcon from "@material-ui/icons/Save";
-import itens from "../../api/apiItems";
+import { itens } from "../../api";
 
 export default function Passo1({ aoEnviar, dadosColetados }) {
   const [nome, setNome] = useState(dadosColetados.nome);

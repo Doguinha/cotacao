@@ -18,6 +18,7 @@ import {
 export default function Passo2({
   itensSelecionados,
   voltarPasso,
+  proximoPasso,
   handleUnidadeCompra,
   handleQuantidade,
   handleRemoverItem,
@@ -98,8 +99,8 @@ export default function Passo2({
           variant="contained"
           color="primary"
           size="small"
-          type="submit"
           startIcon={<SaveIcon />}
+          onClick={proximoPasso}
         >
           Salvar
         </Button>
