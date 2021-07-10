@@ -6,7 +6,7 @@ import { Container } from "@material-ui/core";
 import { Step, StepLabel, Stepper } from "@material-ui/core";
 import { useState } from "react";
 import { uuidv4 } from "./api";
-function App() {
+const App = () => {
   const [passoAtual, setPassoAtual] = useState(0);
   const [dadosColetados, setDadosColetados] = useState({
     itensSelecionados: [],
@@ -49,18 +49,18 @@ function App() {
     setDadosColetados({ ...dadosColetados, itensSelecionados: novosItens });
   };
 
-  function proximoPasso() {
+  const proximoPasso = () => {
     setPassoAtual(passoAtual + 1);
-  }
+  };
 
-  function voltarPasso() {
+  const voltarPasso = () => {
     setPassoAtual(passoAtual - 1);
-  }
+  };
 
-  function coletarDados(dados) {
+  const coletarDados = (dados) => {
     setDadosColetados({ ...dadosColetados, ...dados });
     proximoPasso();
-  }
+  };
 
   const adicionarOrcamento = () => {
     const orcamentosCopia = dadosColetados.orcamentos;
@@ -138,7 +138,7 @@ function App() {
     setDadosColetados({ ...dadosColetados, orcamentos: novosItens });
   };
   const handleRemoveItemOrcamento = (orcamentoId, itemId) => {
-    const novosItens = dadosColetados.orcamentos.map((orcamento) => {
+    let novosOrcamentos = dadosColetados.orcamentos.map((orcamento) => {
       if (orcamento.id === orcamentoId) {
         const itensDoOrcamento = orcamento.itens.filter(
           (itemOrcamento) => itemOrcamento.id !== itemId
@@ -150,7 +150,10 @@ function App() {
       }
       return orcamento;
     });
-    setDadosColetados({ ...dadosColetados, orcamentos: novosItens });
+    novosOrcamentos = novosOrcamentos.filter(
+      (orcamento) => orcamento.itens.length > 0
+    );
+    setDadosColetados({ ...dadosColetados, orcamentos: novosOrcamentos });
   };
 
   const formularios = [
@@ -200,6 +203,6 @@ function App() {
       {formularios[passoAtual]}
     </Container>
   );
-}
+};
 
 export default App;
