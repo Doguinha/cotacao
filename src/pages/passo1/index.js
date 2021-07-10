@@ -2,11 +2,12 @@ import React from "react";
 import { useState } from "react";
 import {
   Button,
-  FormHelperText,
   InputLabel,
   Select,
   MenuItem,
   TextField,
+  Grid,
+  FormControl,
 } from "@material-ui/core";
 import { Autocomplete } from "@material-ui/lab";
 import SaveIcon from "@material-ui/icons/Save";
@@ -43,75 +44,84 @@ export default function Passo1({ aoEnviar, dadosColetados }) {
   return (
     <>
       <form onSubmit={handleSubmit} style={{ marginTop: "1em" }}>
-        <Autocomplete
-          multiple
-          id="combo-box-demo"
-          fullWidth
-          options={itens}
-          value={itensSelecionados}
-          getOptionLabel={(option) => option.nome}
-          getOptionSelected={(option, value) => option.id === value.id}
-          filterSelectedOptions={true}
-          renderInput={(params) => (
-            <TextField
-              {...params}
-              label="Escolha os itens"
-              variant="standard"
+        <Grid container spacing={3}>
+          <Grid item xs={12}>
+            <Autocomplete
+              multiple
+              id="combo-box-demo"
+              fullWidth
+              options={itens}
+              value={itensSelecionados}
+              getOptionLabel={(option) => option.nome}
+              getOptionSelected={(option, value) => option.id === value.id}
+              filterSelectedOptions={true}
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  label="Escolha os itens"
+                  variant="outlined"
+                />
+              )}
+              onChange={handleItemSelecionado}
             />
-          )}
-          onChange={handleItemSelecionado}
-        />
-        <TextField
-          required
-          label="Nome"
-          placeholder="Dê um nome para cotação"
-          fullWidth
-          value={nome}
-          error={false}
-          helperText="Dê um nome para cotação para ser usada nos filtros"
-          onChange={handleNome}
-        />
-        <TextField
-          required
-          label="Objeto"
-          placeholder="Informe o objeto da cotação"
-          fullWidth
-          value={objeto}
-          error={false}
-          helperText="Informe o objeto da cotação para ser usada nos filtros"
-          onChange={handleObjeto}
-        />
-        <div style={{ marginTop: "1em" }}>
-          <InputLabel id="label-tipo">Tipo</InputLabel>
-          <Select
-            labelId="label-tipo"
-            value={tipo}
-            onChange={handleTipo}
-            fullWidth
+          </Grid>
+          <Grid item xs={12}>
+            <TextField
+              required
+              label="Nome"
+              placeholder="Dê um nome para cotação"
+              fullWidth
+              value={nome}
+              error={false}
+              onChange={handleNome}
+              variant="outlined"
+            />
+          </Grid>
+          <Grid item xs={12}>
+            <TextField
+              required
+              label="Objeto"
+              placeholder="Informe o objeto da cotação"
+              fullWidth
+              value={objeto}
+              error={false}
+              onChange={handleObjeto}
+              variant="outlined"
+            />
+          </Grid>
+          <Grid item xs={12}>
+            <FormControl variant="outlined" fullWidth>
+              <InputLabel id="label-tipo">Tipo</InputLabel>
+              <Select
+                labelId="label-tipo"
+                value={tipo}
+                onChange={handleTipo}
+                label="Tipo"
+              >
+                <MenuItem value={"CompraGlobal"}>Compra Global</MenuItem>
+                <MenuItem value={"CompraPorItem"}>Compra por Item</MenuItem>
+              </Select>
+            </FormControl>
+          </Grid>
+          <Grid
+            item
+            xs={12}
+            style={{
+              display: "flex",
+              justifyContent: "flex-end",
+            }}
           >
-            <MenuItem value={"CompraGlobal"}>Compra Global</MenuItem>
-            <MenuItem value={"CompraPorItem"}>Compra por Item</MenuItem>
-          </Select>
-          <FormHelperText>O tipo de compra afeta os cálculos</FormHelperText>
-        </div>
-        <div
-          style={{
-            width: "100%",
-            marginTop: "1em",
-            display: "flex",
-            justifyContent: "flex-end",
-          }}
-        >
-          <Button
-            variant="contained"
-            color="primary"
-            size="small"
-            type="submit"
-            startIcon={<SaveIcon />}
-          >
-            Salvar
-          </Button>
-        </div>
+            <Button
+              variant="contained"
+              color="primary"
+              size="small"
+              type="submit"
+              startIcon={<SaveIcon />}
+            >
+              Salvar
+            </Button>
+          </Grid>
+        </Grid>
       </form>
     </>
   );

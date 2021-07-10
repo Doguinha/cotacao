@@ -13,6 +13,7 @@ import {
   MenuItem,
   TextField,
   IconButton,
+  FormControl,
 } from "@material-ui/core";
 
 export default function Passo2({
@@ -26,11 +27,11 @@ export default function Passo2({
   return (
     <form>
       <TableContainer component={Paper}>
-        <Table size="small" aria-label="a dense table">
+        <Table>
           <TableHead>
             <TableRow>
               <TableCell align="center">Item</TableCell>
-              <TableCell align="center">Unidade Compra</TableCell>
+              <TableCell align="center"> Unidade Compra</TableCell>
               <TableCell align="center">Qtd.</TableCell>
               <TableCell align="center">Opções</TableCell>
             </TableRow>
@@ -38,33 +39,40 @@ export default function Passo2({
           <TableBody>
             {itensSelecionados.map((item) => (
               <TableRow key={item.id}>
-                <TableCell align="center" size="medium">
-                  {item.nome}
-                </TableCell>
-                <TableCell align="center" size="small">
-                  <Select
-                    labelId="label-tipo"
-                    value={item.unidadeCompra}
-                    fullWidth
-                    onChange={(evento) => handleUnidadeCompra(evento, item.id)}
-                  >
-                    <MenuItem value={"Unidade"}>Unidade</MenuItem>
-                    <MenuItem value={"Pacote"}>Pacote</MenuItem>
-                  </Select>
-                </TableCell>
-                <TableCell align="center" size="small">
+                <TableCell align="center">
                   <TextField
-                    inputProps={{ style: { textAlign: "center" } }}
-                    required
-                    type="number"
-                    placeholder="Informe a quantidade"
-                    value={item.quantidade}
-                    error={false}
-                    helperText=""
-                    onChange={(evento) => handleQuantidade(evento, item.id)}
+                    placeholder="Dê um nome para cotação"
+                    value={item.nome}
+                    variant="outlined"
+                    disabled
+                    fullWidth
                   />
                 </TableCell>
                 <TableCell align="center">
+                  <FormControl variant="outlined" fullWidth>
+                    <Select
+                      value={item.unidadeCompra}
+                      onChange={(evento) =>
+                        handleUnidadeCompra(evento, item.id)
+                      }
+                    >
+                      <MenuItem value={"Unidade"}>Unidade</MenuItem>
+                      <MenuItem value={"Pacote"}>Pacote</MenuItem>
+                    </Select>
+                  </FormControl>
+                </TableCell>
+                <TableCell align="center" style={{ width: "12%" }}>
+                  <TextField
+                    inputProps={{ style: { textAlign: "center" } }}
+                    placeholder="Informe a quantidade"
+                    type="number"
+                    value={item.quantidade}
+                    error={false}
+                    variant="outlined"
+                    onChange={(evento) => handleQuantidade(evento, item.id)}
+                  />
+                </TableCell>
+                <TableCell align="center" style={{ width: "12%" }}>
                   <IconButton
                     aria-label="delete"
                     color="secondary"

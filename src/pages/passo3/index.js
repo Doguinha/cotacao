@@ -8,6 +8,7 @@ import {
   PlusOne as PlusOneIcon,
   Delete as DeleteIcon,
 } from "@material-ui/icons";
+import React from "react";
 export default function Passo3({
   orcamentos,
   proximoPasso,
@@ -27,25 +28,6 @@ export default function Passo3({
       margin: theme.spacing(2),
       border: "1px solid #eeeeee",
     },
-    fieldset: {
-      border: "1px solid",
-      padding: "0 1.4em 1.4em 1.4em !important",
-      margin: "0 0 1.5em 0 !important",
-      boxShadow: "0px 0px 0px 0px #000",
-      display: "flex",
-      justifyContent: "center",
-      width: "100%",
-    },
-    legend: {
-      display: "block",
-      maxWidth: "100%",
-      padding: 0,
-      marginBottom: ".5rem",
-      fontSize: "1.5rem",
-      lineHeight: "inherit",
-      color: "inherit",
-      whiteSpace: "normal",
-    },
   }));
   const classes = useStyles();
   return (
@@ -55,7 +37,6 @@ export default function Passo3({
           <Grid container spacing={3}>
             <Grid item xs={6}>
               <Autocomplete
-                id="combo-box-demo"
                 fullWidth
                 options={fornecedores}
                 value={orcamento.fornecedor}
@@ -70,7 +51,7 @@ export default function Passo3({
                   <TextField
                     {...params}
                     label="Escolha o fornecedor"
-                    variant="standard"
+                    variant="outlined"
                   />
                 )}
                 onChange={(evento, novosValores) =>
@@ -88,6 +69,7 @@ export default function Passo3({
                 value={orcamento.dataOrcamento}
                 helperText=""
                 onChange={(evento) => handleDataOrcamento(evento, orcamento.id)}
+                variant="outlined"
               />
             </Grid>
             <Grid item xs={3}>
@@ -100,10 +82,11 @@ export default function Passo3({
                 value={orcamento.dataValidade}
                 helperText=""
                 onChange={(evento) => handleDataValidade(evento, orcamento.id)}
+                variant="outlined"
               />
             </Grid>
-            {orcamento.itens.map((itemOrcamento) => (
-              <>
+            {orcamento.itens.map((itemOrcamento, indice) => (
+              <React.Fragment key={indice}>
                 <Grid item xs={8}>
                   <TextField
                     required
@@ -111,6 +94,7 @@ export default function Passo3({
                     fullWidth
                     defaultValue={itemOrcamento.nome}
                     disabled
+                    variant="outlined"
                   />
                 </Grid>
                 <Grid item xs={3}>
@@ -128,6 +112,7 @@ export default function Passo3({
                         itemOrcamento.id
                       )
                     }
+                    variant="outlined"
                   />
                 </Grid>
                 <Grid item xs={1}>
@@ -141,7 +126,7 @@ export default function Passo3({
                     <DeleteIcon />
                   </IconButton>
                 </Grid>
-              </>
+              </React.Fragment>
             ))}
           </Grid>
         </Paper>
