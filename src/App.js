@@ -72,6 +72,7 @@ const App = () => {
       itens: dadosColetados.itensSelecionados.map((item) => ({
         ...item,
         valorUnitario: "",
+        arquivos: [],
       })),
     });
     setDadosColetados({ ...dadosColetados, orcamentos: orcamentosCopia });
@@ -156,6 +157,27 @@ const App = () => {
     setDadosColetados({ ...dadosColetados, orcamentos: novosOrcamentos });
   };
 
+  const handleChangeArquivos = (evento, orcamentoId) => {
+    if (evento.target.files.length > 0) {
+      let novosOrcamentos = dadosColetados.orcamentos.map((orcamento) => {
+        if (orcamento.id === orcamentoId) {
+          return {
+            ...orcamento,
+            arquivos: Array.from(evento.target.files).map((file) => {
+              return {
+                nome: file.name,
+                url: URL.createObjectURL(file),
+              };
+            }),
+          };
+        }
+        return orcamento;
+      });
+      console.log(JSON.stringify(novosOrcamentos));
+      setDadosColetados({ ...dadosColetados, orcamentos: novosOrcamentos });
+    }
+  };
+
   const formularios = [
     <Passo1 aoEnviar={coletarDados} dadosColetados={dadosColetados} />,
     <Passo2
@@ -176,6 +198,7 @@ const App = () => {
       handleDataValidade={handleDataValidade}
       handleValorUnitarioItemOrcamento={handleValorUnitarioItemOrcamento}
       handleRemoveItemOrcamento={handleRemoveItemOrcamento}
+      handleChangeArquivos={handleChangeArquivos}
     />,
     <Passo4
       aoEnviar={coletarDados}

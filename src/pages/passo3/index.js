@@ -19,6 +19,7 @@ export default function Passo3({
   handleDataValidade,
   handleValorUnitarioItemOrcamento,
   handleRemoveItemOrcamento,
+  handleChangeArquivos,
 }) {
   const useStyles = makeStyles((theme) => ({
     paper: {
@@ -128,6 +129,43 @@ export default function Passo3({
                 </Grid>
               </React.Fragment>
             ))}
+            <Grid item xs={12}>
+              <TextField
+                fullWidth
+                type="file"
+                error={false}
+                helperText=""
+                onChange={(evento) =>
+                  handleChangeArquivos(evento, orcamento.id)
+                }
+                variant="outlined"
+                inputProps={{ multiple: true }}
+              />
+              {orcamento.arquivos && (
+                <ul
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    padding: "0.5em",
+                    alignItems: "start",
+                  }}
+                >
+                  {orcamento.arquivos.map((arquivo) => (
+                    <li
+                      key={arquivo.nome}
+                      style={{
+                        padding: "0.3em",
+                        borderBottom: "1px dotted #cccccc",
+                      }}
+                    >
+                      <a href={arquivo.url} target="_blank" key={arquivo.url}>
+                        {arquivo.nome}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </Grid>
           </Grid>
         </Paper>
       ))}
