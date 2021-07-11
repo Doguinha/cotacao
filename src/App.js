@@ -46,7 +46,20 @@ const App = () => {
     const novosItens = dadosColetados.itensSelecionados.filter(
       (item) => item.id !== itemId
     );
-    setDadosColetados({ ...dadosColetados, itensSelecionados: novosItens });
+    const novosOrcamentos = dadosColetados.orcamentos.map((orcamento) => {
+      const itensOrcamento = orcamento.itens.filter(
+        (item) => item.id !== itemId
+      );
+      return {
+        ...orcamento,
+        itens: itensOrcamento,
+      };
+    });
+    setDadosColetados({
+      ...dadosColetados,
+      itensSelecionados: novosItens,
+      orcamentos: novosOrcamentos,
+    });
   };
 
   const proximoPasso = () => {

@@ -158,7 +158,12 @@ export default function Passo3({
                         borderBottom: "1px dotted #cccccc",
                       }}
                     >
-                      <a href={arquivo.url} target="_blank" key={arquivo.url}>
+                      <a
+                        href={arquivo.url}
+                        target="_blank"
+                        rel="noreferrer"
+                        key={arquivo.url}
+                      >
                         {arquivo.nome}
                       </a>
                     </li>
