@@ -1,5 +1,4 @@
 import React from "react";
-import { useState } from "react";
 import {
   Button,
   InputLabel,
@@ -13,32 +12,10 @@ import { Autocomplete } from "@material-ui/lab";
 import SaveIcon from "@material-ui/icons/Save";
 import { itens } from "../../api";
 
-export default function Passo1({ aoEnviar, dadosColetados }) {
-  const [nome, setNome] = useState(dadosColetados.nome);
-  const [objeto, setObjeto] = useState(dadosColetados.objeto);
-  const [tipo, setTipo] = useState(dadosColetados.tipo);
-  const [itensSelecionados, setItensSelecionados] = useState(
-    dadosColetados.itensSelecionados
-  );
-
-  const handleTipo = (evento) => {
-    setTipo(evento.target.value);
-  };
-
-  const handleNome = (evento) => {
-    setNome(evento.target.value);
-  };
-
-  const handleObjeto = (evento) => {
-    setObjeto(evento.target.value);
-  };
-
-  const handleItemSelecionado = (evento, novosValores) => {
-    setItensSelecionados(novosValores);
-  };
+export default function Passo1(props) {
   const handleSubmit = (evento) => {
     evento.preventDefault();
-    aoEnviar({ nome, objeto, tipo, itensSelecionados });
+    props.proximoPasso();
   };
 
   return (
@@ -51,7 +28,7 @@ export default function Passo1({ aoEnviar, dadosColetados }) {
               id="combo-box-demo"
               fullWidth
               options={itens}
-              value={itensSelecionados}
+              value={props.itensSelecionados}
               getOptionLabel={(option) => option.nome}
               getOptionSelected={(option, value) => option.id === value.id}
               filterSelectedOptions={true}
@@ -62,7 +39,7 @@ export default function Passo1({ aoEnviar, dadosColetados }) {
                   variant="outlined"
                 />
               )}
-              onChange={handleItemSelecionado}
+              onChange={props.handleItemSelecionado}
             />
           </Grid>
           <Grid item xs={12}>
@@ -71,9 +48,9 @@ export default function Passo1({ aoEnviar, dadosColetados }) {
               label="Nome"
               placeholder="Dê um nome para cotação"
               fullWidth
-              value={nome}
+              value={props.nome}
               error={false}
-              onChange={handleNome}
+              onChange={props.handleNome}
               variant="outlined"
             />
           </Grid>
@@ -83,9 +60,9 @@ export default function Passo1({ aoEnviar, dadosColetados }) {
               label="Objeto"
               placeholder="Informe o objeto da cotação"
               fullWidth
-              value={objeto}
+              value={props.objeto}
               error={false}
-              onChange={handleObjeto}
+              onChange={props.handleObjeto}
               variant="outlined"
             />
           </Grid>
@@ -94,8 +71,8 @@ export default function Passo1({ aoEnviar, dadosColetados }) {
               <InputLabel id="label-tipo">Tipo</InputLabel>
               <Select
                 labelId="label-tipo"
-                value={tipo}
-                onChange={handleTipo}
+                value={props.tipo}
+                onChange={props.handleTipo}
                 label="Tipo"
               >
                 <MenuItem value={"CompraGlobal"}>Compra Global</MenuItem>
