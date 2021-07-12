@@ -27,28 +27,34 @@ const App = () => {
   };
 
   const handleItemSelecionado = (evento, novosValores) => {
-    const itensFaltantes = novosValores.filter(
-      ({ id: idNovoItem }) =>
-        !itensSelecionados.some(
-          ({ id: idItemExistente }) => idNovoItem === idItemExistente
-        )
-    );
-    const novosItensOrcamento = itensFaltantes.map((itemFaltante) => {
-      return {
-        ...itemFaltante,
-        valorUnitario: "",
-        arquivos: [],
-      };
-    });
+    const itensFaltantes = novosValores
+      .filter(
+        ({ id: idNovoItem }) =>
+          !itensSelecionados.some(
+            ({ id: idItemExistente }) => idNovoItem === idItemExistente
+          )
+      )
+      .map((itemFaltante) => {
+        return {
+          ...itemFaltante,
+          valorUnitario: "",
+          arquivos: [],
+        };
+      });
     setItensSelecionados(novosValores);
     const novosOrcamentos = orcamentos.map((orcamento) => {
-      const itensOrc = [...orcamento.itens, ...novosItensOrcamento];
+      const itensOrcamentoAtual = orcamento.itens.filter((item) =>
+        novosValores.some((itemNovo) => itemNovo.id === item.id)
+      );
+      const itensOrcamentoFinal = [...itensFaltantes, ...itensOrcamentoAtual];
       return {
         ...orcamento,
-        itens: itensOrc,
+        itens: itensOrcamentoFinal,
       };
     });
-    setOrcamentos(novosOrcamentos);
+    setOrcamentos(
+      novosOrcamentos.filter((orcamento) => orcamento.itens.length > 0)
+    );
   };
 
   const handleQuantidade = (evento, itemId) => {
@@ -178,6 +184,7 @@ const App = () => {
     });
     setOrcamentos(novosItens);
   };
+
   const handleRemoveItemOrcamento = (orcamentoId, itemId) => {
     let novosOrcamentos = orcamentos.map((orcamento) => {
       if (orcamento.id === orcamentoId) {
@@ -213,7 +220,6 @@ const App = () => {
         }
         return orcamento;
       });
-      console.log(JSON.stringify(novosOrcamentos));
       setOrcamentos(novosOrcamentos);
     }
   };
