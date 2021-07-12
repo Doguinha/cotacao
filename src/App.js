@@ -7,30 +7,24 @@ import { Step, StepLabel, Stepper } from "@material-ui/core";
 import { useState } from "react";
 import { uuidv4 } from "./api";
 const App = () => {
+  const [cotacao, setCotacao] = useState({
+    nome: "",
+    objeto: "",
+    tipo: "",
+    itens: [],
+    orcamentos: [],
+  });
   const [passoAtual, setPassoAtual] = useState(0);
-  const [nome, setNome] = useState("");
-  const [objeto, setObjeto] = useState("");
-  const [tipo, setTipo] = useState("CompraGlobal");
-  const [itensSelecionados, setItensSelecionados] = useState([]);
-  const [orcamentos, setOrcamentos] = useState([]);
 
-  const handleTipo = (evento) => {
-    setTipo(evento.target.value);
-  };
-
-  const handleNome = (evento) => {
-    setNome(evento.target.value);
-  };
-
-  const handleObjeto = (evento) => {
-    setObjeto(evento.target.value);
+  const handleChangeAtributosCotacao = (evento) => {
+    setCotacao({ ...cotacao, [evento.target.name]: evento.target.value });
   };
 
   const handleItemSelecionado = (evento, novosValores) => {
     const itensFaltantes = novosValores
       .filter(
         ({ id: idNovoItem }) =>
-          !itensSelecionados.some(
+          !cotacao.itens.some(
             ({ id: idItemExistente }) => idNovoItem === idItemExistente
           )
       )
@@ -41,51 +35,42 @@ const App = () => {
           arquivos: [],
         };
       });
-    setItensSelecionados(novosValores);
-    const novosOrcamentos = orcamentos.map((orcamento) => {
-      const itensOrcamentoAtual = orcamento.itens.filter((item) =>
-        novosValores.some((itemNovo) => itemNovo.id === item.id)
-      );
-      const itensOrcamentoFinal = [...itensFaltantes, ...itensOrcamentoAtual];
-      return {
-        ...orcamento,
-        itens: itensOrcamentoFinal,
-      };
+    const novosOrcamentos = cotacao.orcamentos
+      .map((orcamento) => {
+        const itensOrcamentoAtual = orcamento.itens.filter((item) =>
+          novosValores.some((itemNovo) => itemNovo.id === item.id)
+        );
+        const itensOrcamentoFinal = [...itensFaltantes, ...itensOrcamentoAtual];
+        return {
+          ...orcamento,
+          itens: itensOrcamentoFinal,
+        };
+      })
+      .filter((orcamento) => orcamento.itens.length > 0);
+
+    setCotacao({
+      ...cotacao,
+      itens: novosValores,
+      orcamentos: novosOrcamentos,
     });
-    setOrcamentos(
-      novosOrcamentos.filter((orcamento) => orcamento.itens.length > 0)
-    );
   };
 
-  const handleQuantidade = (evento, itemId) => {
-    const novosItens = itensSelecionados.map((item) => {
+  const handleChangeAtributosItem = (evento, itemId) => {
+    const novosItens = cotacao.itens.map((item) => {
       if (item.id === itemId) {
         return {
           ...item,
-          quantidade: evento.target.value,
+          [evento.target.name]: evento.target.value,
         };
       }
       return item;
     });
-    setItensSelecionados(novosItens);
-  };
-
-  const handleUnidadeCompra = (evento, itemId) => {
-    const novosItens = itensSelecionados.map((item) => {
-      if (item.id === itemId) {
-        return {
-          ...item,
-          unidadeCompra: evento.target.value,
-        };
-      }
-      return item;
-    });
-    setItensSelecionados(novosItens);
+    setCotacao({ ...cotacao, itens: novosItens });
   };
 
   const handleRemoverItem = (itemId) => {
-    const novosItens = itensSelecionados.filter((item) => item.id !== itemId);
-    const novosOrcamentos = orcamentos.map((orcamento) => {
+    const novosItens = cotacao.itens.filter((item) => item.id !== itemId);
+    const novosOrcamentos = cotacao.orcamentos.map((orcamento) => {
       const itensOrcamento = orcamento.itens.filter(
         (item) => item.id !== itemId
       );
@@ -94,8 +79,7 @@ const App = () => {
         itens: itensOrcamento,
       };
     });
-    setItensSelecionados(novosItens);
-    setOrcamentos(novosOrcamentos);
+    setCotacao({ ...cotacao, itens: novosItens, orcamentos: novosOrcamentos });
   };
 
   const proximoPasso = () => {
@@ -107,25 +91,25 @@ const App = () => {
   };
 
   const adicionarOrcamento = () => {
-    const orcamentosCopia = [
-      ...orcamentos,
+    const novosOrcamentos = [
+      ...cotacao.orcamentos,
       {
         id: uuidv4(),
         fornecedor: null,
         dataValidade: new Date().toISOString().split("T")[0],
         dataOrcamento: new Date().toISOString().split("T")[0],
-        itens: itensSelecionados.map((item) => ({
+        itens: cotacao.itens.map((item) => ({
           ...item,
           valorUnitario: "",
           arquivos: [],
         })),
       },
     ];
-    setOrcamentos(orcamentosCopia);
+    setCotacao({ ...cotacao, orcamentos: novosOrcamentos });
   };
 
   const handleSelecionarFornecedor = (fornecedor, orcamentoId) => {
-    const novosItens = orcamentos.map((orcamento) => {
+    const novosOrcamentos = cotacao.orcamentos.map((orcamento) => {
       if (orcamento.id === orcamentoId) {
         return {
           ...orcamento,
@@ -134,37 +118,24 @@ const App = () => {
       }
       return orcamento;
     });
-    setOrcamentos(novosItens);
+    setCotacao({ ...cotacao, orcamentos: novosOrcamentos });
   };
 
-  const handleDataValidade = (evento, orcamentoId) => {
-    const novosItens = orcamentos.map((orcamento) => {
+  const handleDatasOrcamento = (evento, orcamentoId) => {
+    const novosOrcamentos = cotacao.orcamentos.map((orcamento) => {
       if (orcamento.id === orcamentoId) {
         return {
           ...orcamento,
-          dataValidade: evento.target.value,
+          [evento.target.name]: evento.target.value,
         };
       }
       return orcamento;
     });
-    setOrcamentos(novosItens);
-  };
-
-  const handleDataOrcamento = (evento, orcamentoId) => {
-    const novosItens = orcamentos.map((orcamento) => {
-      if (orcamento.id === orcamentoId) {
-        return {
-          ...orcamento,
-          dataOrcamento: evento.target.value,
-        };
-      }
-      return orcamento;
-    });
-    setOrcamentos(novosItens);
+    setCotacao({ ...cotacao, orcamentos: novosOrcamentos });
   };
 
   const handleValorUnitarioItemOrcamento = (evento, orcamentoId, itemId) => {
-    const novosItens = orcamentos.map((orcamento) => {
+    const novosOrcamentos = cotacao.orcamentos.map((orcamento) => {
       if (orcamento.id === orcamentoId) {
         const itensDoOrcamento = orcamento.itens.map((itemOrcamento) => {
           if (itemOrcamento.id === itemId) {
@@ -182,31 +153,30 @@ const App = () => {
       }
       return orcamento;
     });
-    setOrcamentos(novosItens);
+    setCotacao({ ...cotacao, orcamentos: novosOrcamentos });
   };
 
   const handleRemoveItemOrcamento = (orcamentoId, itemId) => {
-    let novosOrcamentos = orcamentos.map((orcamento) => {
-      if (orcamento.id === orcamentoId) {
-        const itensDoOrcamento = orcamento.itens.filter(
-          (itemOrcamento) => itemOrcamento.id !== itemId
-        );
-        return {
-          ...orcamento,
-          itens: itensDoOrcamento,
-        };
-      }
-      return orcamento;
-    });
-    novosOrcamentos = novosOrcamentos.filter(
-      (orcamento) => orcamento.itens.length > 0
-    );
-    setOrcamentos(novosOrcamentos);
+    let novosOrcamentos = cotacao.orcamentos
+      .map((orcamento) => {
+        if (orcamento.id === orcamentoId) {
+          const itensDoOrcamento = orcamento.itens.filter(
+            (itemOrcamento) => itemOrcamento.id !== itemId
+          );
+          return {
+            ...orcamento,
+            itens: itensDoOrcamento,
+          };
+        }
+        return orcamento;
+      })
+      .filter((orcamento) => orcamento.itens.length > 0);
+    setCotacao({ ...cotacao, orcamentos: novosOrcamentos });
   };
 
   const handleChangeArquivos = (evento, orcamentoId) => {
     if (evento.target.files.length > 0) {
-      let novosOrcamentos = orcamentos.map((orcamento) => {
+      let novosOrcamentos = cotacao.orcamentos.map((orcamento) => {
         if (orcamento.id === orcamentoId) {
           return {
             ...orcamento,
@@ -220,38 +190,31 @@ const App = () => {
         }
         return orcamento;
       });
-      setOrcamentos(novosOrcamentos);
+      setCotacao({ ...cotacao, orcamentos: novosOrcamentos });
     }
   };
 
   const formularios = [
     <Passo1
-      handleNome={handleNome}
-      handleObjeto={handleObjeto}
-      handleTipo={handleTipo}
+      handleChangeAtributosCotacao={handleChangeAtributosCotacao}
       handleItemSelecionado={handleItemSelecionado}
       proximoPasso={proximoPasso}
-      nome={nome}
-      tipo={tipo}
-      objeto={objeto}
-      itensSelecionados={itensSelecionados}
+      cotacao={cotacao}
     />,
     <Passo2
-      itensSelecionados={itensSelecionados}
+      cotacao={cotacao}
       voltarPasso={voltarPasso}
       proximoPasso={proximoPasso}
-      handleUnidadeCompra={handleUnidadeCompra}
-      handleQuantidade={handleQuantidade}
+      handleChangeAtributosItem={handleChangeAtributosItem}
       handleRemoverItem={handleRemoverItem}
     />,
     <Passo3
-      orcamentos={orcamentos}
+      cotacao={cotacao}
       voltarPasso={voltarPasso}
       proximoPasso={proximoPasso}
       adicionarOrcamento={adicionarOrcamento}
       handleSelecionarFornecedor={handleSelecionarFornecedor}
-      handleDataOrcamento={handleDataOrcamento}
-      handleDataValidade={handleDataValidade}
+      handleDatasOrcamento={handleDatasOrcamento}
       handleValorUnitarioItemOrcamento={handleValorUnitarioItemOrcamento}
       handleRemoveItemOrcamento={handleRemoveItemOrcamento}
       handleChangeArquivos={handleChangeArquivos}

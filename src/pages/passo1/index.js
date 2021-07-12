@@ -28,7 +28,7 @@ export default function Passo1(props) {
               id="combo-box-demo"
               fullWidth
               options={itens}
-              value={props.itensSelecionados}
+              value={props.cotacao.itens}
               getOptionLabel={(option) => option.nome}
               getOptionSelected={(option, value) => option.id === value.id}
               filterSelectedOptions={true}
@@ -48,9 +48,10 @@ export default function Passo1(props) {
               label="Nome"
               placeholder="Dê um nome para cotação"
               fullWidth
-              value={props.nome}
+              value={props.cotacao.nome}
+              name="nome"
               error={false}
-              onChange={props.handleNome}
+              onChange={props.handleChangeAtributosCotacao}
               variant="outlined"
             />
           </Grid>
@@ -60,9 +61,10 @@ export default function Passo1(props) {
               label="Objeto"
               placeholder="Informe o objeto da cotação"
               fullWidth
-              value={props.objeto}
+              name="objeto"
+              value={props.cotacao.objeto}
               error={false}
-              onChange={props.handleObjeto}
+              onChange={props.handleChangeAtributosCotacao}
               variant="outlined"
             />
           </Grid>
@@ -71,8 +73,9 @@ export default function Passo1(props) {
               <InputLabel id="label-tipo">Tipo</InputLabel>
               <Select
                 labelId="label-tipo"
-                value={props.tipo}
-                onChange={props.handleTipo}
+                name="tipo"
+                value={props.cotacao.tipo}
+                onChange={props.handleChangeAtributosCotacao}
                 label="Tipo"
               >
                 <MenuItem value={"CompraGlobal"}>Compra Global</MenuItem>

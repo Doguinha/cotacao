@@ -10,13 +10,12 @@ import {
 } from "@material-ui/icons";
 import React from "react";
 export default function Passo3({
-  orcamentos,
+  cotacao,
   proximoPasso,
   voltarPasso,
   adicionarOrcamento,
   handleSelecionarFornecedor,
-  handleDataOrcamento,
-  handleDataValidade,
+  handleDatasOrcamento,
   handleValorUnitarioItemOrcamento,
   handleRemoveItemOrcamento,
   handleChangeArquivos,
@@ -33,7 +32,7 @@ export default function Passo3({
   const classes = useStyles();
   return (
     <form>
-      {orcamentos.map((orcamento) => (
+      {cotacao.orcamentos.map((orcamento) => (
         <Paper className={classes.paper} key={orcamento.id}>
           <Grid container spacing={3}>
             <Grid item xs={6}>
@@ -67,9 +66,12 @@ export default function Passo3({
                 fullWidth
                 type="date"
                 error={false}
+                name="dataOrcamento"
                 value={orcamento.dataOrcamento}
                 helperText=""
-                onChange={(evento) => handleDataOrcamento(evento, orcamento.id)}
+                onChange={(evento) =>
+                  handleDatasOrcamento(evento, orcamento.id)
+                }
                 variant="outlined"
               />
             </Grid>
@@ -80,9 +82,12 @@ export default function Passo3({
                 fullWidth
                 type="date"
                 error={false}
+                name="dataValidade"
                 value={orcamento.dataValidade}
                 helperText=""
-                onChange={(evento) => handleDataValidade(evento, orcamento.id)}
+                onChange={(evento) =>
+                  handleDatasOrcamento(evento, orcamento.id)
+                }
                 variant="outlined"
               />
             </Grid>

@@ -17,11 +17,10 @@ import {
 } from "@material-ui/core";
 
 export default function Passo2({
-  itensSelecionados,
+  cotacao,
   voltarPasso,
   proximoPasso,
-  handleUnidadeCompra,
-  handleQuantidade,
+  handleChangeAtributosItem,
   handleRemoverItem,
 }) {
   return (
@@ -37,7 +36,7 @@ export default function Passo2({
             </TableRow>
           </TableHead>
           <TableBody>
-            {itensSelecionados.map((item) => (
+            {cotacao.itens.map((item) => (
               <TableRow key={item.id}>
                 <TableCell align="center">
                   <TextField
@@ -51,9 +50,10 @@ export default function Passo2({
                 <TableCell align="center">
                   <FormControl variant="outlined" fullWidth>
                     <Select
+                      name="unidadeCompra"
                       value={item.unidadeCompra}
                       onChange={(evento) =>
-                        handleUnidadeCompra(evento, item.id)
+                        handleChangeAtributosItem(evento, item.id)
                       }
                     >
                       <MenuItem value={"Unidade"}>Unidade</MenuItem>
@@ -66,10 +66,13 @@ export default function Passo2({
                     inputProps={{ style: { textAlign: "center" } }}
                     placeholder="Informe a quantidade"
                     type="number"
+                    name="quantidade"
                     value={item.quantidade}
                     error={false}
                     variant="outlined"
-                    onChange={(evento) => handleQuantidade(evento, item.id)}
+                    onChange={(evento) =>
+                      handleChangeAtributosItem(evento, item.id)
+                    }
                   />
                 </TableCell>
                 <TableCell align="center" style={{ width: "12%" }}>
