@@ -70,15 +70,17 @@ const App = () => {
 
   const handleRemoverItem = (itemId) => {
     const novosItens = cotacao.itens.filter((item) => item.id !== itemId);
-    const novosOrcamentos = cotacao.orcamentos.map((orcamento) => {
-      const itensOrcamento = orcamento.itens.filter(
-        (item) => item.id !== itemId
-      );
-      return {
-        ...orcamento,
-        itens: itensOrcamento,
-      };
-    });
+    const novosOrcamentos = cotacao.orcamentos
+      .map((orcamento) => {
+        const itensOrcamento = orcamento.itens.filter(
+          (item) => item.id !== itemId
+        );
+        return {
+          ...orcamento,
+          itens: itensOrcamento,
+        };
+      })
+      .filter((orcamento) => orcamento.itens.length > 0);
     setCotacao({ ...cotacao, itens: novosItens, orcamentos: novosOrcamentos });
   };
 
